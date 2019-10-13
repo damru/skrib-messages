@@ -21,6 +21,8 @@ public class MessageService {
     private final GeolocationService geolocationService;
     private final MessageRepository messageRepository;
 
+    private final static int DISTANCE_MAX = 10000; // FIXME to be removed
+
     public MessageService(GeolocationService geolocationService, MessageRepository messageRepository) {
         this.geolocationService = geolocationService;
         this.messageRepository = messageRepository;
@@ -44,7 +46,7 @@ public class MessageService {
     public List<Message> listReachableMessages(Geolocation userGeolocation) {
         List<Message> messages = messageRepository.findAll();
         return messages.stream()
-                       .filter(message -> isReachable(message, userGeolocation, 10L, DistanceUnit.KILOMETER))
+                       .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
                        .collect(Collectors.toList());
     }
 
@@ -55,7 +57,7 @@ public class MessageService {
      */
     public Message getMessage(Long idMessage, Geolocation userGeolocation) {
         Message message = getMessage(idMessage);
-        if (isReachable(message, userGeolocation, 10L, DistanceUnit.KILOMETER)) {
+        if (isReachable(message, userGeolocation, DISTANCE_MAX)) {
             return message;
         }
 
@@ -83,15 +85,15 @@ public class MessageService {
      * @param message
      * @param userGeolocation
      * @param distanceMax
-     * @param unit
      * @return
      */
-    private boolean isReachable(Message message, Geolocation userGeolocation, Long distanceMax, DistanceUnit unit) {
-        double distanceBetweenUserAndMessage =
-                geolocationService.distanceBetweenUserAndMessage(unit, userGeolocation, message.getGeolocation());
+    private boolean isReachable(Message message, Geolocation userGeolocation, int distanceMax) {
+        int distanceBetweenUserAndMessage = (int)
+                Math.round(geolocationService.distanceBetweenUserAndMessage(DistanceUnit.METER,
+                                                                            userGeolocation,
+                                                                            message.getGeolocation()));
         message.setDistance(distanceBetweenUserAndMessage);
         return distanceBetweenUserAndMessage <= message.getRayon() && distanceBetweenUserAndMessage <= distanceMax;
-
     }
 
 }

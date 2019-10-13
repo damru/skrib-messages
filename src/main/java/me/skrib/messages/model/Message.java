@@ -1,28 +1,30 @@
 package me.skrib.messages.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
-@Data
-@Builder
+@Entity
+@Table(name = "messages")
+@Builder(builderMethodName = "message")
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idMessage")
-@Entity
-public class Message {
+@Getter
+@Setter
+public class Message extends AuditableEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMessage;
     private String body;
     @Embedded
@@ -35,6 +37,6 @@ public class Message {
      * It is used for display only, to show how far is the message.
      */
     @Transient
-    private double distance;
+    private int distance;
 
 }
