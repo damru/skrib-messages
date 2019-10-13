@@ -25,7 +25,7 @@ public class Message extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idMessage;
+    private Long id;
     private String body;
     @Embedded
     private Geolocation geolocation;

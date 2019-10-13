@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Created by damien on 24/12/2016.
- */
 @Service
 public class MessageService {
 

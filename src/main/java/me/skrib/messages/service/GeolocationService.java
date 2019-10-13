@@ -4,9 +4,6 @@ import me.skrib.messages.model.DistanceUnit;
 import me.skrib.messages.model.Geolocation;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by damien on 09/01/2017.
- */
 @Service
 public class GeolocationService {
 

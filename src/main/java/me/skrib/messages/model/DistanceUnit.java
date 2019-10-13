@@ -2,9 +2,6 @@ package me.skrib.messages.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Created by damien on 11/01/2017.
- */
 public enum DistanceUnit {
     KILOMETER("KM","kilometer",1000)
     , MILE("MI","mile", 1609.34)
