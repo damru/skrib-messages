@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.skrib.messages.client.skrib.users.User;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class Message extends AuditableEntity {
     @Embedded
     private Geolocation geolocation;
     private Long rayon;
-    private String authorId;
+    private Long authorId;
 
     /**
      * Distance is transient because we do not persist it as it depends on the user who is reading the message.
@@ -38,5 +39,7 @@ public class Message extends AuditableEntity {
      */
     @Transient
     private int distance;
+    @Transient
+    private User author;
 
 }

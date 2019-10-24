@@ -7,4 +7,3 @@ app:
   http:
     cors:
       allowedOrigins: ${CORS_ALLOWED_ORIGINS}
-

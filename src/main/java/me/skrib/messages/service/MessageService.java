@@ -1,5 +1,7 @@
 package me.skrib.messages.service;
 
+import me.skrib.messages.client.skrib.users.SkribUsersApi;
+import me.skrib.messages.client.skrib.users.User;
 import me.skrib.messages.model.DistanceUnit;
 import me.skrib.messages.model.Geolocation;
 import me.skrib.messages.model.Message;
@@ -18,13 +20,16 @@ public class MessageService {
 
     private final GeolocationService geolocationService;
     private final MessageRepository messageRepository;
+    private final SkribUsersApi skribUsersApi;
 
     private final static int DISTANCE_MAX = 10000; // FIXME to be removed
 
     public MessageService(GeolocationService geolocationService,
-                          MessageRepository messageRepository) {
+                          MessageRepository messageRepository,
+                          SkribUsersApi skribUsersApi) {
         this.geolocationService = geolocationService;
         this.messageRepository = messageRepository;
+        this.skribUsersApi = skribUsersApi;
     }
 
     /**
@@ -34,8 +39,9 @@ public class MessageService {
      * @return new message
      */
     public Message saveMessage(Message message) {
-        String oktaId = OktaHelper.getUserClaims().getUid();
-        message.setAuthorId(oktaId);
+        User author = skribUsersApi.getByOktaId(OktaHelper.getUserClaims().getUid()).getBody();
+        message.setAuthorId(author.getId());
+        message.setAuthor(author);
         return messageRepository.save(message);
     }
 
@@ -48,6 +54,10 @@ public class MessageService {
         List<Message> messages = messageRepository.findAllByOrderByIdDesc();
         return messages.stream()
                        .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
+                       .peek(message -> {
+                           User author = skribUsersApi.getById(message.getAuthorId()).getBody();
+                           message.setAuthor(author);
+                       })
                        .collect(Collectors.toList());
     }
 
@@ -59,6 +69,8 @@ public class MessageService {
     public Message getMessage(Long idMessage, Geolocation userGeolocation) {
         Message message = getMessage(idMessage);
         if (isReachable(message, userGeolocation, DISTANCE_MAX)) {
+            User author = skribUsersApi.getById(message.getAuthorId()).getBody();
+            message.setAuthor(author);
             return message;
         }
 
