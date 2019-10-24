@@ -30,7 +30,7 @@ public class Message extends AuditableEntity {
     @Embedded
     private Geolocation geolocation;
     private Long rayon;
-    private Long authorId;
+    private String authorId;
 
     /**
      * Distance is transient because we do not persist it as it depends on the user who is reading the message.

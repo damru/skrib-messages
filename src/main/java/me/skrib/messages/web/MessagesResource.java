@@ -3,10 +3,9 @@ package me.skrib.messages.web;
 import me.skrib.messages.model.Geolocation;
 import me.skrib.messages.model.Message;
 import me.skrib.messages.service.MessageService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping("messages")
 public class MessagesResource {
@@ -29,9 +28,9 @@ public class MessagesResource {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> saveMessage(@RequestBody Message message) {
-        messageService.saveMessage(message);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @PreAuthorize("#oauth2.hasScope('openid')")
+    public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
+        return ResponseEntity.ok(messageService.saveMessage(message));
     }
 
     @GetMapping
@@ -50,4 +49,10 @@ public class MessagesResource {
         Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
         return ResponseEntity.ok(messageService.getMessage(id, geolocation));
     }
+
+    @GetMapping("/hello-oauth")
+    public String sayHello(Principal principal) {
+        return "Hello, " + principal;
+    }
+
 }

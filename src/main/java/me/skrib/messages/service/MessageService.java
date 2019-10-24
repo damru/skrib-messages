@@ -4,6 +4,7 @@ import me.skrib.messages.model.DistanceUnit;
 import me.skrib.messages.model.Geolocation;
 import me.skrib.messages.model.Message;
 import me.skrib.messages.model.MessageRepository;
+import me.skrib.okta.OktaHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,7 +21,8 @@ public class MessageService {
 
     private final static int DISTANCE_MAX = 10000; // FIXME to be removed
 
-    public MessageService(GeolocationService geolocationService, MessageRepository messageRepository) {
+    public MessageService(GeolocationService geolocationService,
+                          MessageRepository messageRepository) {
         this.geolocationService = geolocationService;
         this.messageRepository = messageRepository;
     }
@@ -32,6 +34,8 @@ public class MessageService {
      * @return new message
      */
     public Message saveMessage(Message message) {
+        String oktaId = OktaHelper.getUserClaims().getUid();
+        message.setAuthorId(oktaId);
         return messageRepository.save(message);
     }
 
@@ -41,7 +45,7 @@ public class MessageService {
      * @return message
      */
     public List<Message> listReachableMessages(Geolocation userGeolocation) {
-        List<Message> messages = messageRepository.findAll();
+        List<Message> messages = messageRepository.findAllByOrderByIdDesc();
         return messages.stream()
                        .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
                        .collect(Collectors.toList());
