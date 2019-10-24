@@ -1,5 +1,6 @@
 package me.skrib.messages.client.skrib.users;
 
+import io.damru.openfeign.JwtForward;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "skribUsers",
-        url = "http://localhost:8082/users"
+        url = "http://localhost:8082/users",
+        configuration = JwtForward.class
 )
 public interface SkribUsersApi {
 
