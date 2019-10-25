@@ -7,3 +7,6 @@ app:
   http:
     cors:
       allowedOrigins: ${CORS_ALLOWED_ORIGINS}
+  client:
+    users:
+      url: ${USERS_API_URL}

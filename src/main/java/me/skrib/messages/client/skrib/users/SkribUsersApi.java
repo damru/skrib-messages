@@ -1,24 +1,24 @@
 package me.skrib.messages.client.skrib.users;
 
-import io.damru.openfeign.JwtForward;
+import io.damru.openfeign.oauth2.JwtForward;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
-        name = "skribUsers",
-        url = "http://localhost:8082/users",
+        name = "skrib-users",
+        url = "${app.client.users.url}",
         configuration = JwtForward.class
 )
 public interface SkribUsersApi {
 
     @RequestMapping(
+            path = "/me",
             method = RequestMethod.GET
     )
-    ResponseEntity<User> getByOktaId(@RequestParam(value = "oktaId") String oktaId);
+    ResponseEntity<User> me();
 
     @RequestMapping(
             method = RequestMethod.GET,

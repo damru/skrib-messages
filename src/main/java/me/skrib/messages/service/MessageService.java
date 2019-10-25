@@ -6,7 +6,6 @@ import me.skrib.messages.model.DistanceUnit;
 import me.skrib.messages.model.Geolocation;
 import me.skrib.messages.model.Message;
 import me.skrib.messages.model.MessageRepository;
-import me.skrib.okta.OktaHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,7 +38,7 @@ public class MessageService {
      * @return new message
      */
     public Message saveMessage(Message message) {
-        User author = skribUsersApi.getByOktaId(OktaHelper.getUserClaims().getUid()).getBody();
+        User author = skribUsersApi.me().getBody();
         message.setAuthorId(author.getId());
         message.setAuthor(author);
         return messageRepository.save(message);
