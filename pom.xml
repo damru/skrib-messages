@@ -49,6 +49,11 @@
             <artifactId>skrib-starter-okta</artifactId>
             <version>${me.skrib.version}</version>
         </dependency>
+        <dependency>
+            <groupId>me.skrib</groupId>
+            <artifactId>skrib-buildpack-autoconfig</artifactId>
+            <version>${me.skrib.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

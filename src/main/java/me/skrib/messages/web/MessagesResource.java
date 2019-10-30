@@ -18,7 +18,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("messages")
+@RequestMapping
 public class MessagesResource {
 
     private final MessageService messageService;
@@ -48,11 +48,6 @@ public class MessagesResource {
             @RequestParam(name = "longitude") double longitude) {
         Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
         return ResponseEntity.ok(messageService.getMessage(id, geolocation));
-    }
-
-    @GetMapping("/hello-oauth")
-    public String sayHello(Principal principal) {
-        return "Hello, " + principal;
     }
 
 }
