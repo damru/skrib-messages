@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -38,7 +37,7 @@ public class MessagesResource {
             @RequestParam(name = "latitude") double latitude,
             @RequestParam(name = "longitude") double longitude) {
         Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
-        return ResponseEntity.ok(messageService.listReachableMessages(geolocation));
+        return ResponseEntity.ok(messageService.listMessages(geolocation));
     }
 
     @GetMapping(path = "/{id}")
@@ -48,6 +47,15 @@ public class MessagesResource {
             @RequestParam(name = "longitude") double longitude) {
         Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
         return ResponseEntity.ok(messageService.getMessage(id, geolocation));
+    }
+
+    @GetMapping(path = "/users/{userId}")
+    public ResponseEntity<List<Message>> listMessagesByUser(
+            @PathVariable(name = "userId") Long userId,
+            @RequestParam(name = "latitude") double latitude,
+            @RequestParam(name = "longitude") double longitude) {
+        Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
+        return ResponseEntity.ok(messageService.listMessages(geolocation, userId));
     }
 
 }

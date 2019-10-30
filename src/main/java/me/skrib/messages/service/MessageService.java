@@ -31,12 +31,6 @@ public class MessageService {
         this.skribUsersApi = skribUsersApi;
     }
 
-    /**
-     * Save message in database.
-     *
-     * @param message
-     * @return new message
-     */
     public Message saveMessage(Message message) {
         User author = skribUsersApi.me().getBody();
         message.setAuthorId(author.getId());
@@ -44,12 +38,7 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    /**
-     * Get a list of all reachable messages depending on user location.
-     *
-     * @return message
-     */
-    public List<Message> listReachableMessages(Geolocation userGeolocation) {
+    public List<Message> listMessages(Geolocation userGeolocation) {
         List<Message> messages = messageRepository.findAllByOrderByIdDesc();
         return messages.stream()
                        .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
@@ -60,11 +49,17 @@ public class MessageService {
                        .collect(Collectors.toList());
     }
 
-    /**
-     * Get a message depending on user location.
-     *
-     * @return message
-     */
+    public List<Message> listMessages(Geolocation userGeolocation, Long userId) {
+        User author = skribUsersApi.getById(userId).getBody();
+        List<Message> messages = messageRepository.findByAuthorIdOrderByIdDesc(author.getId());
+        return messages.stream()
+                       .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
+                       .peek(message -> {
+                           message.setAuthor(author);
+                       })
+                       .collect(Collectors.toList());
+    }
+
     public Message getMessage(Long idMessage, Geolocation userGeolocation) {
         Message message = getMessage(idMessage);
         if (isReachable(message, userGeolocation, DISTANCE_MAX)) {
@@ -76,12 +71,6 @@ public class MessageService {
         throw new ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Message if too far.");
     }
 
-    /**
-     * Get a message.
-     *
-     * @param idMessage
-     * @return message
-     */
     private Message getMessage(Long idMessage) {
         Optional<Message> message = messageRepository.findById(idMessage);
 
