@@ -8,9 +8,11 @@ import me.skrib.messages.model.Message;
 import me.skrib.messages.model.MessageRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,27 +45,25 @@ public class MessageService {
         return messages.stream()
                        .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
                        .peek(message -> {
-                           User author = skribUsersApi.getById(message.getAuthorId()).getBody();
+                           User author = skribUsersApi.getByCriteria(Map.of("id", message.getAuthorId())).getBody();
                            message.setAuthor(author);
                        })
                        .collect(Collectors.toList());
     }
 
-    public List<Message> listMessages(Geolocation userGeolocation, Long userId) {
-        User author = skribUsersApi.getById(userId).getBody();
+    public List<Message> listMessages(Geolocation userGeolocation, String username) {
+        User author = skribUsersApi.getByCriteria(Map.of("username", username)).getBody();
         List<Message> messages = messageRepository.findByAuthorIdOrderByIdDesc(author.getId());
         return messages.stream()
                        .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
-                       .peek(message -> {
-                           message.setAuthor(author);
-                       })
+                       .peek(message -> message.setAuthor(author))
                        .collect(Collectors.toList());
     }
 
     public Message getMessage(Long idMessage, Geolocation userGeolocation) {
         Message message = getMessage(idMessage);
         if (isReachable(message, userGeolocation, DISTANCE_MAX)) {
-            User author = skribUsersApi.getById(message.getAuthorId()).getBody();
+            User author = skribUsersApi.getByCriteria(Map.of("id", message.getAuthorId())).getBody();
             message.setAuthor(author);
             return message;
         }

@@ -9,5 +9,4 @@ spring:
       enabled: true
 
 CORS_ALLOWED_ORIGINS: http://localhost:8080
-
 USERS_API_URL: http://localhost:8082

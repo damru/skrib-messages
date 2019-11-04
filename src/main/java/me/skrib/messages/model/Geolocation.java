@@ -1,5 +1,6 @@
 package me.skrib.messages.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import javax.persistence.Embeddable;
 @Getter
 @Setter
 @Embeddable
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Geolocation {
 
     public static final String HEADER_VALUE = "x-user-geolocation";

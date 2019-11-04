@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping
 public class MessagesResource {
 
     private final MessageService messageService;
@@ -32,30 +31,38 @@ public class MessagesResource {
         return ResponseEntity.ok(messageService.saveMessage(message));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Message>> listMessages(
+    @GetMapping(
+            path = "/{username}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    public ResponseEntity<List<Message>> listMessagesByUser(
+            @PathVariable(name = "username") String username,
             @RequestParam(name = "latitude") double latitude,
             @RequestParam(name = "longitude") double longitude) {
+        Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
+        return ResponseEntity.ok(messageService.listMessages(geolocation, username));
+    }
+
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    public ResponseEntity<List<Message>> listMessages(
+            @RequestHeader(name = Geolocation.HEADER_VALUE + "-latitude") double latitude,
+            @RequestHeader(name = Geolocation.HEADER_VALUE + "-longitude") double longitude) {
         Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
         return ResponseEntity.ok(messageService.listMessages(geolocation));
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(
+            path = "/{id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
     public ResponseEntity<Message> getMessage(
             @PathVariable(name = "id") Long id,
             @RequestParam(name = "latitude") double latitude,
             @RequestParam(name = "longitude") double longitude) {
         Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
         return ResponseEntity.ok(messageService.getMessage(id, geolocation));
-    }
-
-    @GetMapping(path = "/users/{userId}")
-    public ResponseEntity<List<Message>> listMessagesByUser(
-            @PathVariable(name = "userId") Long userId,
-            @RequestParam(name = "latitude") double latitude,
-            @RequestParam(name = "longitude") double longitude) {
-        Geolocation geolocation = Geolocation.location().latitude(latitude).longitude(longitude).build();
-        return ResponseEntity.ok(messageService.listMessages(geolocation, userId));
     }
 
 }
