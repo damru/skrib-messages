@@ -13,7 +13,8 @@ import java.util.Map;
         name = "skrib-users",
         url = "${app.client.users.url}",
         configuration = {
-                JwtForward.class
+                JwtForward.class,
+                FeignFormEncoder.class
         }
 )
 public interface SkribUsersApi {
@@ -28,6 +29,7 @@ public interface SkribUsersApi {
     @RequestMapping(
             path = "/search",
             method = RequestMethod.GET,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     ResponseEntity<User> getByCriteria(Map<String, ?> params);

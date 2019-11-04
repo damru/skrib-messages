@@ -24,6 +24,7 @@
         <java.version>1.8</java.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
+
         <io.damru.version>1.0-SNAPSHOT</io.damru.version>
         <me.skrib.version>1.0-SNAPSHOT</me.skrib.version>
     </properties>
@@ -32,7 +33,7 @@
         <dependencies>
             <dependency>
                 <groupId>io.damru</groupId>
-                <artifactId>spring-dependencies</artifactId>
+                <artifactId>damru-spring-boot-dependencies</artifactId>
                 <version>${io.damru.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -44,23 +45,24 @@
 
         <dependency>
             <groupId>io.damru</groupId>
-            <artifactId>spring-starter-rest</artifactId>
+            <artifactId>damru-spring-boot-starter-rest</artifactId>
         </dependency>
 
         <dependency>
             <groupId>io.damru</groupId>
-            <artifactId>spring-starter-openfeign</artifactId>
+            <artifactId>damru-spring-boot-starter-openfeign</artifactId>
         </dependency>
 
         <dependency>
             <groupId>io.damru</groupId>
-            <artifactId>spring-starter-security</artifactId>
+            <artifactId>damru-spring-boot-starter-security</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>me.skrib</groupId>
-            <artifactId>skrib-starter-okta</artifactId>
-            <version>${me.skrib.version}</version>
+            <groupId>com.okta.spring</groupId>
+            <artifactId>okta-spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>me.skrib</groupId>
             <artifactId>skrib-buildpack-autoconfig</artifactId>
@@ -84,7 +86,7 @@
 
         <dependency>
             <groupId>io.damru</groupId>
-            <artifactId>spring-starter-test</artifactId>
+            <artifactId>damru-spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
