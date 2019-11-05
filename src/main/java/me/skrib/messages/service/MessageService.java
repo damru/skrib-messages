@@ -53,11 +53,14 @@ public class MessageService {
 
     public List<Message> listMessages(Geolocation userGeolocation, String username) {
         User author = skribUsersApi.getByCriteria(Map.of("username", username)).getBody();
-        List<Message> messages = messageRepository.findByAuthorIdOrderByIdDesc(author.getId());
-        return messages.stream()
-                       .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
-                       .peek(message -> message.setAuthor(author))
-                       .collect(Collectors.toList());
+        if (author != null) {
+            List<Message> messages = messageRepository.findByAuthorIdOrderByIdDesc(author.getId());
+            return messages.stream()
+                           .filter(message -> isReachable(message, userGeolocation, DISTANCE_MAX))
+                           .peek(message -> message.setAuthor(author))
+                           .collect(Collectors.toList());
+        }
+        return null;
     }
 
     public Message getMessage(Long idMessage, Geolocation userGeolocation) {
