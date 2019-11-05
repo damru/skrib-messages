@@ -2,6 +2,7 @@ package me.skrib.messages.client.skrib.users;
 
 import io.damru.openfeign.oauth2.JwtForward;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +14,7 @@ import java.util.Map;
         name = "skrib-users",
         url = "${app.client.users.url}",
         configuration = {
-                JwtForward.class,
-                FeignFormEncoder.class
+                JwtForward.class
         }
 )
 public interface SkribUsersApi {
@@ -29,9 +29,8 @@ public interface SkribUsersApi {
     @RequestMapping(
             path = "/search",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
-    ResponseEntity<User> getByCriteria(Map<String, ?> params);
+    ResponseEntity<User> getByCriteria(@SpringQueryMap Map<String, ?> params);
 
 }
