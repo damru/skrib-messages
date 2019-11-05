@@ -7,6 +7,8 @@ app:
   http:
     cors:
       allowedOrigins: ${CORS_ALLOWED_ORIGINS}
+    security:
+      deny-by-default: false
   client:
     users:
       url: ${USERS_API_URL}

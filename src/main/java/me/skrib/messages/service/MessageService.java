@@ -2,6 +2,7 @@ package me.skrib.messages.service;
 
 import me.skrib.messages.client.skrib.users.SkribUsersApi;
 import me.skrib.messages.client.skrib.users.User;
+import me.skrib.messages.exception.MessageTooFarException;
 import me.skrib.messages.model.DistanceUnit;
 import me.skrib.messages.model.Geolocation;
 import me.skrib.messages.model.Message;
@@ -71,7 +72,7 @@ public class MessageService {
             return message;
         }
 
-        throw new ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Message if too far.");
+        throw new MessageTooFarException("id", idMessage);
     }
 
     private Message getMessage(Long idMessage) {
