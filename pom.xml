@@ -25,8 +25,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
 
-        <io.damru.version>1.0-SNAPSHOT</io.damru.version>
-        <me.skrib.version>1.0-SNAPSHOT</me.skrib.version>
+        <io.damru.version>0.1-SNAPSHOT</io.damru.version>
+        <me.skrib.version>0.1-SNAPSHOT</me.skrib.version>
     </properties>
 
     <dependencyManagement>
@@ -65,7 +65,7 @@
 
         <dependency>
             <groupId>me.skrib</groupId>
-            <artifactId>skrib-buildpack-autoconfig</artifactId>
+            <artifactId>skrib-spring-boot-buildpack</artifactId>
             <version>${me.skrib.version}</version>
         </dependency>
 
